@@ -1825,7 +1825,7 @@ LoadMapHeader::
 
 Func_0db5:: ; XXX
 	callba LoadUnusedBluesHouseMissableObjectData
-asm_0dbd
+asm_0dbd:
 	ld a, [wCurMapTileset]
 	ld [wUnusedD119], a
 	ld a, [wCurMap]

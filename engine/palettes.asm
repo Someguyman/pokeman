@@ -1081,7 +1081,7 @@ TranslatePalPacketToBGMapAttributes::
 
 PalPacketPointers::
 	db (palPacketPointersEnd - palPacketPointers) / 2
-palPacketPointers
+palPacketPointers:
 	dw BlkPacket_WholeScreen
 	dw BlkPacket_Battle
 	dw BlkPacket_StatusScreen
@@ -1094,7 +1094,7 @@ palPacketPointers
 	dw BlkPacket_GameFreakIntro
 	dw wPalPacket
 	dw UnknownPacket_72751
-palPacketPointersEnd
+palPacketPointersEnd:
 
 CopySGBBorderTiles:
 ; SGB tile data is stored in a 4BPP planar format.
