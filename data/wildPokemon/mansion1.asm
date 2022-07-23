@@ -1,0 +1,14 @@
+MansionMons1:
+	db $0A
+	db 34,GRIMER
+	db 32,GRIMER
+	db 30,PONYTA
+	db 32,GROWLITHE
+	db 32,VULPIX
+	db 32,PONYTA
+	db 30,GROWLITHE
+	db 28,PONYTA
+	db 36,MUK
+	db 38,WEEZING
+	db $00
+

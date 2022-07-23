@@ -1,0 +1,14 @@
+Route23Mons:
+	db $0A
+	db 38,SANDSHREW
+	db 38,EKANS
+	db 36,MANKEY
+	db 42,SANDSLASH
+	db 42,ARBOK
+	db 40,FEAROW
+	db 41,MANKEY
+	db 42,DITTO
+	db 42,FEAROW
+	db 46,PRIMEAPE
+	db $00
+

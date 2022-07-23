@@ -1,0 +1,14 @@
+Route11Mons:
+	db $0F
+	db 14,SANDSHREW
+	db 15,SPEAROW
+	db 14,EKANS
+	db 15,DROWZEE
+	db 14,SPEAROW
+	db 17,DROWZEE
+	db 18,SANDSHREW
+	db 18,EKANS
+	db 19,DROWZEE
+	db 12,DROWZEE
+	db $00
+

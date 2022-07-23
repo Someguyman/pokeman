@@ -1,0 +1,14 @@
+Route8Mons:
+	db $0F
+	db 20,PIDGEY
+	db 20,MEOWTH
+	db 18,SANDSHREW
+	db 18,EKANS
+	db 17,GROWLITHE
+	db 17,VULPIX
+	db 21,EKANS
+	db 21,SANDSHREW
+	db 22,VULPIX
+	db 22,GROWLITHE
+	db $00
+
