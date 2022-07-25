@@ -676,6 +676,15 @@ HandlePoisonBurnLeechSeed_DecreaseOwnHP:
 	ld hl, wEnemyBattleStatus3
 	ld de, wEnemyToxicCounter
 .playersTurn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;joenote - If this bit is set, this function is being called for leech seed.
+;			Do not do Toxic routines
+	ld a, [wUnusedC000]
+	bit 6, a	;check if this is for leech seed
+	res 6, a 	;(reset the bit without affecting flags)
+	ld [wUnusedC000], a
+	jr nz, .noToxic	;if so, then do not increment the toxic counter or multiply the damage for toxic
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	bit BadlyPoisoned, [hl]
 	jr z, .noToxic
 	ld a, [de]    ; increment toxic counter
@@ -8872,7 +8881,7 @@ SetAttackAnimPal:
 	and a
 	ret z
 	cp STRUGGLE
-	ret nc	
+	jp nc, SetAttackAnimPal_otheranim	;reset battle pals for non-move battle animations
 	
 	ld a, $e4
 	ld [wAnimPalette], a
@@ -8898,6 +8907,30 @@ SetAttackAnimPal:
 	ld a, [hl]
 	ld b, a
 
+	ld a, [wUnusedC000]
+
+	bit 7, a	;check the bit that is set when hurting self from confusion or crash damage
+	jr z, .noselfdamage
+	;if hurting self, load default palette
+	ld b, PAL_BW
+	jr .resetOBP0
+.noselfdamage
+
+	ld a, [wAnimationID]
+	and a
+	ret z
+	cp ABSORB
+	jr z, .noleechseed
+	;if absorbing, load default palette
+	ld b, PAL_GREENMON
+	jr .resetOBP0
+.noleechseed
+
+.resetOBP0
+	;make sure to reset palette/shade data into OBP0
+	ld a, %11100100
+	ld [rOBP0], a
+	
 	ld c, 4
 .transfer
 	ld d, CONVERT_OBP0
@@ -8917,7 +8950,69 @@ SetAttackAnimPal:
 	pop de
 	pop bc
 	pop hl
-	ret	
+	ret
+
+;This function copies BGP colors 0-3 into OBP colors 0-3
+;It is meant to reset the object palettes on the fly
+SetAttackAnimPal_otheranim:
+	push hl
+	push bc
+	push de
+	
+	ld c, 4
+.loop
+	ld a, 4
+	sub c
+	;multiply index by 8 since each index represents 8 bytes worth of data
+	add a
+	add a
+	add a
+	ld [rBGPI], a
+	or $80 ; set auto-increment bit for writing
+	ld [rOBPI], a
+	ld hl, rBGPD
+	ld de, rOBPD
+	
+	ld b, 4
+.loop2
+	ld a, [rLCDC]
+	and rLCDC_ENABLE_MASK
+	jr z, .lcd_dis
+	;lcd in enabled otherwise
+.wait1
+	;wait for current blank period to end
+	ld a, [rSTAT]
+	and %10 ; mask for non-V-blank/non-H-blank STAT mode
+	jr z, .wait1
+	;out of blank period now
+.wait2
+	ld a, [rSTAT]
+	and %10 ; mask for non-V-blank/non-H-blank STAT mode
+	jr nz, .wait2
+	;back in blank period now
+.lcd_dis	
+	;LCD is disabled, so safe to read/write colors directly
+	ld a, [hl]
+	ld [de], a
+	ld a, [rBGPI]
+	inc a
+	ld [rBGPI], a
+	ld a, [hl]
+	ld [de], a
+	ld a, [rBGPI]
+	inc a
+	ld [rBGPI], a
+	dec b
+	jr nz, .loop2
+	
+	dec c
+	jr nz, .loop
+	
+	pop de
+	pop bc
+	pop hl
+	ret
+
 TypePalColorList:
 	db PAL_BW;normal
 	db PAL_BW;fighting
@@ -8926,7 +9021,7 @@ TypePalColorList:
 	db PAL_BW;ground
 	db PAL_GREYMON;rock
 	db PAL_BW;untyped
-	db PAL_GREENMON;bug
+	db PAL_BW;bug
 	db PAL_PURPLEMON;ghost
 	db PAL_BW;unused
 	db PAL_BW;unused
