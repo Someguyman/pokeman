@@ -485,3 +485,9 @@ GBCBasePalettes:
 	RGB 28, 28, 28
 	RGB 16, 16, 16
 	RGB  3,  3,  3
+
+	; PAL_White
+	RGB 31, 31, 31
+	RGB 31, 31, 31
+	RGB 22, 22, 22
+	RGB  3,  3,  3

@@ -5713,13 +5713,18 @@ MoveHitTest:
 	ld a,[wEnemyMoveAccuracy]
 	ld b,a
 .doAccuracyCheck
-    inc b
-    ret z
-    dec b
-	ret z
+; if the random number generated is greater than or equal to the scaled accuracy, the move misses
+; note that this means that even the highest accuracy is still just a 255/256 chance, not 100%
+
+	; The following snippet is taken from Pokemon Crystal, it fixes the above bug.
+	ld a, b
+	cp $FF ; Is the value $FF?
+	ret z ; If so, we need not calculate, just so we can fix this bug.
+
 	call BattleRandom
 	cp b
-	ret c
+	jr nc, .moveMissed
+	ret
 .moveMissed
 	xor a
 	ld hl,wDamage ; zero the damage
@@ -8904,7 +8909,7 @@ SetAttackAnimPal:
 	push af
 
 	call CheckIfBall
-	jr nz, .do_ball_color
+	jp nz, .do_ball_color
 
 
 ;doing a move animation, so find its type and apply color
@@ -8922,25 +8927,56 @@ SetAttackAnimPal:
 	ld a, [hl]
 	ld b, a
 
-	ld a, [wUnusedC000]
-
-	bit 7, a	;check the bit that is set when hurting self from confusion or crash damage
-	jr z, .noselfdamage
-	;if hurting self, load default palette
-	ld b, PAL_BW
-	jr .starttransfer
-.noselfdamage
-
 	ld a, [wAnimationID]
 	and a
 	ret z
+	cp POUND
+	jr nz, .noselfdamage
+	ld b, PAL_BW
+	jP .starttransfer
+.noselfdamage
 	cp ABSORB		;check for Absorb/LeechSeed draining animation
 	jr nz, .noleechseed
-	;if absorbing, load as default palette
 	ld b, PAL_GREENMON
 	jr .starttransfer
-
 .noleechseed
+	cp LEECH_LIFE		;check for non-move battle animations
+	jr nz, .not_leechlife
+	ld b, PAL_YELLOWMON
+	jr .starttransfer
+.not_leechlife
+	cp SELFDESTRUCT		;check for non-move battle animations
+	jr nz, .not_selfdestruct
+	ld b, PAL_YELLOWMON
+	jr .starttransfer
+.not_selfdestruct
+	cp EGG_BOMB		;check for non-move battle animations
+	jr nz, .not_eggbomb
+	ld b, PAL_YELLOWMON
+.not_eggbomb
+	cp EXPLOSION		;check for non-move battle animations
+	jr nz, .not_explosion
+	ld b, PAL_YELLOWMON
+.not_explosion
+	cp HYPER_BEAM		;check for non-move battle animations
+	jr nz, .not_hyperbeam
+	ld b, PAL_YELLOWMON
+.not_hyperbeam
+	cp FOCUS_ENERGY		;check for non-move battle animations
+	jr nz, .not_focusenergy
+	ld b, PAL_YELLOWMON
+.not_focusenergy
+	cp GROWTH		;check for non-move battle animations
+	jr nz, .not_growth
+	ld b, PAL_GREENMON
+.not_growth
+	cp SWIFT		;check for non-move battle animations
+	jr nz, .not_swift
+	ld b, PAL_YELLOWMON
+.not_swift
+	cp RECOVER		;check for non-move battle animations
+	jr nz, .starttransfer
+	ld b, PAL_YELLOWMON
 .starttransfer
 	;make sure to reset palette/shade data into OBP0
 	;have to do this so colors transfer to the proper positions
@@ -8959,6 +8995,7 @@ SetAttackAnimPal:
 	ld [wcf91], a
 	push bc
 	callba TransferMonPal
+.skip
 	pop bc
 	dec c
 	jr nz, .transfer
@@ -9065,7 +9102,7 @@ TypePalColorList:
 	db PAL_GREYMON;rock
 	db PAL_BW;untyped
 	db PAL_BW;bug
-	db PAL_PURPLEMON;ghost
+	db PAL_WHITE;ghost
 	db PAL_BW;unused
 	db PAL_BW;unused
 	db PAL_BW;unused
