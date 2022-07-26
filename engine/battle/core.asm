@@ -642,8 +642,10 @@ HurtByLeechSeedText:
 	TX_FAR _HurtByLeechSeedText
 	db "@"
 
-; decreases the mon's current HP by 1/16 of the Max HP (multiplied by number of toxic ticks if active)
+;; decreases the mon's current HP by 1/16 of the Max HP (multiplied by number of toxic ticks if active)
 ; note that the toxic ticks are considered even if the damage is not poison (hence the Leech Seed glitch)
+; joenote - This has been fixed.
+; since a pkmn cannot be both burned and poisoned, burn is unaffected by this problem.
 ; hl: HP pointer
 ; bc (out): total damage
 HandlePoisonBurnLeechSeed_DecreaseOwnHP:
@@ -8864,14 +8866,22 @@ BattleMonPartyAttr:
 
 SetAttackAnimPal:
 	call GetPredefRegisters
-	
+
+
+	;set wAnimPalette based on if in grayscale or color
+	ld a, $e4
+	ld [wAnimPalette], a
+	ld a, [wOnSGB]
+	and a
+	ret z
 	ld a, $f0
 	ld [wAnimPalette], a
-	
+
+	;return if not on a GBC
 	ld a, [hGBC]
 	and a
 	ret z 
-	
+
 	ld a, [wIsInBattle]
 	and a
 	ret z
@@ -8880,18 +8890,23 @@ SetAttackAnimPal:
 	ld a, [wAnimationID]
 	and a
 	ret z
-	cp STRUGGLE
-	jp nc, SetAttackAnimPal_otheranim	;reset battle pals for non-move battle animations
-	
+	cp STRUGGLE		;check for non-move battle animations
+	call nc, CheckIfBall
+	jp z, SetAttackAnimPal_otheranim	;reset battle pals for any other battle animations
+
 	ld a, $e4
 	ld [wAnimPalette], a
-	
+
 	push hl
 	push bc
 	push de
 	ld a, [wcf91]
 	push af
-	
+
+	call CheckIfBall
+	jr nz, .do_ball_color
+
+
 ;doing a move animation, so find its type and apply color
 	ld a, [H_WHOSETURN]
 	and a
@@ -8913,23 +8928,26 @@ SetAttackAnimPal:
 	jr z, .noselfdamage
 	;if hurting self, load default palette
 	ld b, PAL_BW
-	jr .resetOBP0
+	jr .starttransfer
 .noselfdamage
 
 	ld a, [wAnimationID]
 	and a
 	ret z
-	cp ABSORB
-	jr z, .noleechseed
-	;if absorbing, load default palette
+	cp ABSORB		;check for Absorb/LeechSeed draining animation
+	jr nz, .noleechseed
+	;if absorbing, load as default palette
 	ld b, PAL_GREENMON
-	jr .resetOBP0
-.noleechseed
+	jr .starttransfer
 
-.resetOBP0
+.noleechseed
+.starttransfer
 	;make sure to reset palette/shade data into OBP0
-	ld a, %11100100
-	ld [rOBP0], a
+	;have to do this so colors transfer to the proper positions
+;	ld a, %11100100
+;	ld [rOBP0], a
+;NOTE: rOBP0 value is now set before entering this function, and colors will transfer based on its value
+;		;Typically this will be $E4 or a complemented version of it
 	
 	ld c, 4
 .transfer
@@ -8950,6 +8968,31 @@ SetAttackAnimPal:
 	pop de
 	pop bc
 	pop hl
+	ret
+.do_ball_color
+	ld a, [wcf91]
+	ld hl, ItemPalList
+	ld b, 0
+	ld c, a
+	add hl, bc
+	ld a, [hl]
+	ld b, a
+	jr .starttransfer
+;this functions sets z flag if not using a ball item, otherwise clears z flag if using a ball item
+CheckIfBall:
+	ld a, [wcf91]
+	and a
+	jr z, .not_ball
+	cp SAFARI_BALL
+	jr z, .is_ball
+	cp POKE_BALL + 1
+	jr nc, .not_ball
+.is_ball
+	ld a, 1
+	and a
+	ret
+.not_ball
+	xor a
 	ret
 
 ;This function copies BGP colors 0-3 into OBP colors 0-3
@@ -9041,3 +9084,14 @@ TypePalColorList:
 	db PAL_PINKMON;psychic
 	db PAL_CYANMON;ice
 	db PAL_BLUEMON;dragon
+
+ItemPalList:
+	db PAL_BW	;null item
+	db PAL_PURPLEMON	;master ball
+	db PAL_YELLOWMON	;ultra ball
+	db PAL_BLUEMON	;great ball
+	db PAL_REDMON	;pokeball
+	db PAL_BW	;town map
+	db PAL_BW	;bike
+	db PAL_BW	;surfboard
+	db PAL_GREENMON	;safari ball

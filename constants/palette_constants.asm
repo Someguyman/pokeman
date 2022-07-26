@@ -32,7 +32,7 @@ const_value = 0
 	const PAL_TOWNMAP   ; $0C
 	const PAL_LOGO1     ; $0D
 	const PAL_LOGO2     ; $0E
-	const PAL_EXP          ; $0F
+	const PAL_EXP       ; $0F
 	const PAL_MEWMON    ; $10
 	const PAL_BLUEMON   ; $11
 	const PAL_REDMON    ; $12
@@ -59,3 +59,4 @@ const_value = 0
 	const PAL_27        ; $27
 ;joenote - custom pals
 	const PAL_BW        ; $28	;gbc only
+	const PAL_UBALL     ; $29	;gbc only
