@@ -506,6 +506,11 @@ ItemUseBall:
 .skip6
 	ld a,[wcf91]
 	push af
+	
+	; forces rested ball to use enemy mons palette upon capture
+	ld b, SET_PAL_BATTLE
+	call RunPaletteCommand
+	
 	ld a, [wEnemyMonSpecies2]
 	ld [wcf91], a
 	ld a, [wEnemyMonLevel]

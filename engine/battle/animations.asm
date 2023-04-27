@@ -543,13 +543,15 @@ AnimationShakeScreenHorizontallySlow:
 	ret
 
 SetAnimationPalette:
+	ld b, $e4
 	ld a, [wOnSGB]
 	and a
-	ld a, $e4
+	;ld a, $e4	;redundant
 	jr z, .notSGB
-	ld a, $f0
-	ld [wAnimPalette], a
-	ld b, $e4
+	;ld a, $f0
+	;ld [wAnimPalette], a	;will handle in a SetAttackAnimPal
+
+	;if animation is TRADE_BALL_DROP_ANIM to TRADE_BALL_POOF_ANIM, load f0 into rOBP0
 	ld a, [wAnimationID]
 	cp TRADE_BALL_DROP_ANIM
 	jr c, .next
@@ -557,21 +559,16 @@ SetAnimationPalette:
 	jr nc, .next
 	ld b, $f0
 .next
-	ld a, b
-	ld [rOBP0], a
-	ld a, $6c
-	ld [rOBP1], a
-	call UpdateGBCPal_OBP0
-	call UpdateGBCPal_OBP1
-	ret
 .notSGB
-	ld a, $e4
-	ld [wAnimPalette], a
+	ld a, b
+;	ld a, $e4
+;	ld [wAnimPalette], a	;will handle in SetAttackAnimPal
 	ld [rOBP0], a
 	ld a, $6c
 	ld [rOBP1], a
 	call UpdateGBCPal_OBP0
 	call UpdateGBCPal_OBP1
+	predef SetAttackAnimPal	;joenote - new function to handle animation palettes
 	ret
 
 Func_78e98:
@@ -777,11 +774,16 @@ DoBallTossSpecialEffects:
 	ld a, [wcf91]
 	cp a, 3 ; is it a Master Ball or Ultra Ball?
 	jr nc, .skipFlashingEffect
+	;don't complement colors on the last frame
+	ld a, [wSubAnimCounter]
+	cp 1
+	jr z, .skipFlashingEffect
 .flashingEffect ; do a flashing effect if it's Master Ball or Ultra Ball
 	ld a, [rOBP0]
 	xor a, %00111100 ; complement colors 1 and 2
 	ld [rOBP0], a
-	call UpdateGBCPal_OBP0
+;	call UpdateGBCPal_OBP0
+	predef SetAttackAnimPal
 .skipFlashingEffect
 	ld a, [wSubAnimCounter]
 	cp a, 11 ; is it the beginning of the subanimation?
@@ -797,13 +799,17 @@ DoBallTossSpecialEffects:
 	cp a, $10 ; is the enemy pokemon the Ghost Marowak?
 	ret nz
 ; if the enemy pokemon is the Ghost Marowak, make it dodge during the last 3 frames
+;joenote - made this a take up a bit less space
+;	ld a, [wSubAnimCounter]
+;	cp 3
+;	jr z, .moveGhostMarowakLeft
+;	cp 2
+;	jr z, .moveGhostMarowakLeft
+;	cp 1
+;	ret nz
 	ld a, [wSubAnimCounter]
-	cp a, 3
-	jr z, .moveGhostMarowakLeft
-	cp a, 2
-	jr z, .moveGhostMarowakLeft
-	cp a, 1
-	ret nz
+	cp 4
+	ret nc
 .moveGhostMarowakLeft
 	coord hl, 17, 0
 	ld de, 20
@@ -822,7 +828,8 @@ DoBallTossSpecialEffects:
 	ret
 .isTrainerBattle ; if it's a trainer battle, shorten the animation by one frame
 	ld a, [wSubAnimCounter]
-	cp a, 3
+;	cp 3
+	cp 2
 	ret nz
 	dec a
 	ld [wSubAnimCounter], a
