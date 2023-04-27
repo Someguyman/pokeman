@@ -8931,50 +8931,54 @@ SetAttackAnimPal:
 	and a
 	ret z
 	cp POUND
-	jr nz, .noselfdamage
+	jr nz, .noselfdamage 		;check for self inflicted confusion damage
 	ld b, PAL_BW
-	jP .starttransfer
 .noselfdamage
-	cp ABSORB		;check for Absorb/LeechSeed draining animation
+	cp ABSORB
 	jr nz, .noleechseed
 	ld b, PAL_GREENMON
-	jr .starttransfer
 .noleechseed
-	cp LEECH_LIFE		;check for non-move battle animations
-	jr nz, .not_leechlife
-	ld b, PAL_YELLOWMON
-	jr .starttransfer
-.not_leechlife
-	cp SELFDESTRUCT		;check for non-move battle animations
-	jr nz, .not_selfdestruct
-	ld b, PAL_YELLOWMON
-	jr .starttransfer
-.not_selfdestruct
-	cp EGG_BOMB		;check for non-move battle animations
-	jr nz, .not_eggbomb
-	ld b, PAL_YELLOWMON
-.not_eggbomb
-	cp EXPLOSION		;check for non-move battle animations
-	jr nz, .not_explosion
-	ld b, PAL_YELLOWMON
-.not_explosion
-	cp HYPER_BEAM		;check for non-move battle animations
-	jr nz, .not_hyperbeam
-	ld b, PAL_YELLOWMON
-.not_hyperbeam
-	cp FOCUS_ENERGY		;check for non-move battle animations
-	jr nz, .not_focusenergy
-	ld b, PAL_YELLOWMON
-.not_focusenergy
-	cp GROWTH		;check for non-move battle animations
+	cp GROWTH
 	jr nz, .not_growth
 	ld b, PAL_GREENMON
 .not_growth
-	cp SWIFT		;check for non-move battle animations
+	cp LEECH_LIFE
+	jr nz, .not_leechlife
+	ld b, PAL_YELLOWMON
+.not_leechlife
+	cp SELFDESTRUCT
+	jr nz, .not_selfdestruct
+	ld b, PAL_YELLOWMON
+.not_selfdestruct
+	cp EGG_BOMB
+	jr nz, .not_eggbomb
+	ld b, PAL_YELLOWMON
+.not_eggbomb
+	cp EXPLOSION
+	jr nz, .not_explosion
+	ld b, PAL_YELLOWMON
+.not_explosion
+	cp HYPER_BEAM
+	jr nz, .not_hyperbeam
+	ld b, PAL_YELLOWMON
+.not_hyperbeam
+	cp FOCUS_ENERGY
+	jr nz, .not_focusenergy
+	ld b, PAL_YELLOWMON
+.not_focusenergy
+	cp SWIFT
 	jr nz, .not_swift
 	ld b, PAL_YELLOWMON
 .not_swift
-	cp RECOVER		;check for non-move battle animations
+	cp STUN_SPORE
+	jr nz, .not_stunspore
+	ld b, PAL_YELLOWMON
+.not_stunspore
+	cp PAY_DAY
+	jr nz, .not_payday
+	ld b, PAL_YELLOWMON
+.not_payday
+	cp RECOVER
 	jr nz, .starttransfer
 	ld b, PAL_YELLOWMON
 .starttransfer
@@ -9017,13 +9021,11 @@ SetAttackAnimPal:
 	jr .starttransfer
 ;this functions sets z flag if not using a ball item, otherwise clears z flag if using a ball item
 CheckIfBall:
-	ld a, [wcf91]
-	and a
-	jr z, .not_ball
-	cp SAFARI_BALL
+	ld a, [wAnimationID]
+	cp TOSS_ANIM
 	jr z, .is_ball
-	cp POKE_BALL + 1
-	jr nc, .not_ball
+	cp ULTRATOSS_ANIM
+	jr nz, .not_ball
 .is_ball
 	ld a, 1
 	and a
