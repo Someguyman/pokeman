@@ -333,8 +333,8 @@ GBCBasePalettes:
 	; PAL_0F
 	RGB 31, 31, 31
 	RGB 31, 31,  0 
-    RGB  4, 17, 31 
-    RGB  3,  3,  3 
+	RGB  4, 17, 31 
+	RGB  3,  3,  3 
 
 	; PAL_MEWMON
 	RGB 31, 31, 31

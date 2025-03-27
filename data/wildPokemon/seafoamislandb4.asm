@@ -6,8 +6,8 @@ IslandMonsB4:
 	db 32,KINGLER
 	db 28,SEEL
 	db 32,SEEL
-	db 27,GOLBAT
-	db 45,ZUBAT
+	db 34,JYNX
+	db 36,JYNX
 	db 30,DEWGONG
 	db 34,DEWGONG
 

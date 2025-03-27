@@ -779,12 +779,12 @@ index = 0
 index = index + 1
 	ENDR
 	
-	ld a, PAL_EXP 
-    call GetGBCBasePalAddress 
-    xor a 
-    call DMGPalToGBCPal 
-    ld a, 4 
-    call TransferCurBGPData 
+	ld a, PAL_EXP
+	call GetGBCBasePalAddress
+	xor a
+	call DMGPalToGBCPal
+	ld a, 4
+	call TransferCurBGPData
 
 	ret
 

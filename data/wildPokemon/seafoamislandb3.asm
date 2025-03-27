@@ -3,12 +3,12 @@ IslandMonsB3:
 	db 27,GOLBAT
 	db 36,ZUBAT
 	db 29,KRABBY
-	db 27,ZUBAT
+	db 27,SEEL
 	db 30,KINGLER
 	db 26,SEEL
 	db 31,KRABBY
-	db 30,SEEL
-	db 28,DEWGONG
+	db 30,DEWGONG
+	db 32,JYNX
 	db 32,DEWGONG
 
 	db $05

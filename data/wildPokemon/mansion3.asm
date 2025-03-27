@@ -1,14 +1,13 @@
 MansionMons3:
 	db $0A
-	db 32,GRIMER
-	db 35,GRIMER
-	db 38,VULPIX
-	db 36,GROWLITHE
-	db 36,MAGMAR
-	db 43,MUK
+	db 40,RATTATA
+	db 34,GRIMER
+	db 34,KOFFING
+	db 33,VULPIX
+	db 33,GROWLITHE
 	db 38,KOFFING
-	db 38,PONYTA
-	db 38,MUK
+	db 34,MAGMAR
+	db 36,MAGMAR
+	db 41,MUK
 	db 41,WEEZING
 	db $00
-
