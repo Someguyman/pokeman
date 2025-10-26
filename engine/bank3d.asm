@@ -641,10 +641,24 @@ BlankLeaderNames:				INCBIN "gfx/blank_leader_names.2bpp"
 CircleTile:						INCBIN "gfx/circle_tile.2bpp"
 BadgeNumbersTileGraphics:		INCBIN "gfx/badge_numbers.2bpp"
 
+ReadOldRodData:
+	ld a, [wCurMap]
+	ld c, a
+	ld hl, OldRodData
+	jr GoFish
+
+ReadGoodRodData:
+	ld a, [wCurMap]
+	ld c, a
+	ld hl, GoodRodData
+	jr GoFish
+
 ReadSuperRodData:
 	ld a, [wCurMap]
 	ld c, a
-	ld hl, FishingSlots
+	ld hl, SuperRodData
+;fallthrough
+GoFish:
 .loop
 	ld a, [hli]
 	cp $ff
@@ -681,6 +695,8 @@ GenerateRandomFishingEncounter:
 	ld d, [hl]
 	ret
 
+INCLUDE "data/old_rod.asm"
+INCLUDE "data/good_rod.asm"
 INCLUDE "data/super_rod.asm"
 INCLUDE "engine/battle/bank3d_battle.asm"
 INCLUDE "engine/items/tm_prices.asm"

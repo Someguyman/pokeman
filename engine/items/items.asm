@@ -63,7 +63,7 @@ ItemUsePtrTable:
 	dw UnusableItem      ; BIKE_VOUCHER
 	dw ItemUseXAccuracy  ; X_ACCURACY
 	dw ItemUseEvoStone   ; LEAF_STONE
-	dw ItemUseCardKey    ; CARD_KEY
+	dw UnusableItem      ; CARD_KEY
 	dw UnusableItem      ; NUGGET
 	dw UnusableItem      ; ??? PP_UP
 	dw ItemUsePokedoll   ; POKE_DOLL
@@ -1684,62 +1684,6 @@ ItemUseXAccuracy:
 	callabd_ModifyPikachuHappiness PIKAHAPPY_USEDXITEM
 	jp PrintItemUseTextAndRemoveItem
 
-; This function is bugged and never works. It always jumps to ItemUseNotTime.
-; The Card Key is handled in a different way.
-ItemUseCardKey:
-	xor a
-	ld [wUnusedD71F], a
-	call GetTileAndCoordsInFrontOfPlayer
-	ld a,[GetTileAndCoordsInFrontOfPlayer]
-	cp a,$18
-	jr nz,.next0
-	ld hl,CardKeyTable1
-	jr .next1
-
-.next0
-	cp $24
-	jr nz, .next2
-	ld hl, CardKeyTable2
-	jr .next1
-
-.next2
-	cp $5e
-	jp nz, ItemUseNotTime
-	ld hl, CardKeyTable3
-.next1
-	ld a, [wCurMap]
-	ld b, a
-.loop
-	ld a, [hli]
-	cp $ff
-	jp z, ItemUseNotTime
-	cp b
-	jr nz, .nextEntry1
-	ld a, [hli]
-	cp d
-	jr nz, .nextEntry2
-	ld a, [hli]
-	cp e
-	jr nz, .nextEntry3
-	ld a, [hl]
-	ld [wUnusedD71F], a
-	jr .done
-
-.nextEntry1
-	inc hl
-.nextEntry2
-	inc hl
-.nextEntry3
-	inc hl
-	jr .loop
-
-.done
-	ld hl, ItemUseText00
-	call PrintText
-	ld hl, wd728
-	set 7, [hl]
-	ret
-
 ; These tables are probably supposed to be door locations in Silph Co.,
 ; but they are unused.
 ; The reason there are 3 tables is unknown.
@@ -2061,42 +2005,33 @@ CoinCaseNumCoinsText:
 ItemUseOldRod:
 	call FishingInit
 	jp c, ItemUseNotTime
-	lb bc, 5, MAGIKARP
-	ld a, $1 ; set bite
+	callab ReadOldRodData
+	ld c, e
+	ld b, d
+	ld a, $2
+	ld [wRodResponse], a
+	ld a, c
+	and a ; are there fish in the map?
+	jr z, DoNotGenerateFishingEncounter ; if not, do not generate an encounter
+	ld a, $1
+	ld [wRodResponse], a
 	jr RodResponse
+	xor a
+	ld [wRodResponse], a
+	jr DoNotGenerateFishingEncounter
 
 ItemUseGoodRod:
 	call FishingInit
 	jp c, ItemUseNotTime
-.RandomLoop
-	call Random
-	srl a
-	jr c, .SetBite
-	and %11
-	cp 2
-	jr nc, .RandomLoop
-	; choose which monster appears
-	ld hl, GoodRodMons
-	add a
-	ld c, a
-	ld b, 0
-	add hl, bc
-	ld b, [hl]
-	inc hl
-	ld c, [hl]
-	and a
-.SetBite
-	ld a, 0
-	rla
-	xor 1
-	jr RodResponse
-
-INCLUDE "data/good_rod.asm"
+	callab ReadGoodRodData
+	jr ContinueRod
 
 ItemUseSuperRod:
 	call FishingInit
 	jp c, ItemUseNotTime
 	callab ReadSuperRodData
+;fallthrough
+ContinueRod:
 	ld c, e
 	ld b, d
 	ld a, $2
@@ -3216,6 +3151,8 @@ CheckMapForMon:
 	ld a, c
 	ld [de], a
 	inc de
+	inc hl
+	ret
 .nextEntry
 	inc hl
 	inc hl

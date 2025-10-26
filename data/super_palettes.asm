@@ -482,7 +482,7 @@ GBCBasePalettes:
 
 	; PAL_BW	;joenote - adding a black & white palette just for GBC
 	RGB 31, 31, 31
-	RGB 28, 28, 28
+	RGB 25, 25, 25
 	RGB 16, 16, 16
 	RGB  3,  3,  3
 

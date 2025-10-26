@@ -1,42 +1,42 @@
 WildDataPointers:
-	dw NoMons      ; PALLET_TOWN
-	dw NoMons      ; VIRIDIAN_CITY
-	dw NoMons      ; PEWTER_CITY
-	dw NoMons      ; CERULEAN_CITY
-	dw NoMons      ; LAVENDER_TOWN
-	dw NoMons      ; VERMILION_CITY
-	dw NoMons      ; CELADON_CITY
-	dw NoMons      ; FUCHSIA_CITY
-	dw NoMons      ; CINNABAR_ISLAND
-	dw NoMons      ; INDIGO_PLATEAU
-	dw NoMons      ; SAFFRON_CITY
-	dw NoMons      ; unused
-	dw Route1Mons  ; ROUTE_1
-	dw Route2Mons  ; ROUTE_2
-	dw Route3Mons  ; ROUTE_3
-	dw Route4Mons  ; ROUTE_4
-	dw Route5Mons  ; ROUTE_5
-	dw Route6Mons  ; ROUTE_6
-	dw Route7Mons  ; ROUTE_7
-	dw Route8Mons  ; ROUTE_8
-	dw Route9Mons  ; ROUTE_9
-	dw Route10Mons ; ROUTE_10
-	dw Route11Mons ; ROUTE_11
-	dw Route12Mons ; ROUTE_12
-	dw Route13Mons ; ROUTE_13
-	dw Route14Mons ; ROUTE_14
-	dw Route15Mons ; ROUTE_15
-	dw Route16Mons ; ROUTE_16
-	dw Route17Mons ; ROUTE_17
-	dw Route18Mons ; ROUTE_18
-	dw Route19Mons ; ROUTE_19
-	dw Route20Mons ; ROUTE_20
-	dw Route21Mons ; ROUTE_21
-	dw Route22Mons ; ROUTE_22
-	dw Route23Mons ; ROUTE_23
-	dw Route24Mons ; ROUTE_24
-	dw Route25Mons ; ROUTE_25
-	dw NoMons      ; REDS_HOUSE_1F
+	dw SeaWaterMons          ; PALLET_TOWN
+	dw PondWaterMons         ; VIRIDIAN_CITY
+	dw NoMons                ; PEWTER_CITY
+	dw SeaWaterMons          ; CERULEAN_CITY
+	dw NoMons                ; LAVENDER_TOWN
+	dw SeaWaterMons          ; VERMILION_CITY
+	dw PondWaterMons         ; CELADON_CITY
+	dw PondWaterMons         ; FUCHSIA_CITY
+	dw NoMons                ; CINNABAR_ISLAND
+	dw NoMons                ; INDIGO_PLATEAU
+	dw NoMons                ; SAFFRON_CITY
+	dw NoMons                ; unused
+	dw Route1Mons            ; ROUTE_1
+	dw Route2Mons            ; ROUTE_2
+	dw Route3Mons            ; ROUTE_3
+	dw Route4Mons            ; ROUTE_4
+	dw Route5Mons            ; ROUTE_5
+	dw Route6Mons            ; ROUTE_6
+	dw Route7Mons            ; ROUTE_7
+	dw Route8Mons            ; ROUTE_8
+	dw Route9Mons            ; ROUTE_9
+	dw Route10Mons           ; ROUTE_10
+	dw Route11Mons           ; ROUTE_11
+	dw Route12Mons           ; ROUTE_12
+	dw Route13Mons           ; ROUTE_13
+	dw Route14Mons           ; ROUTE_14
+	dw Route15Mons           ; ROUTE_15
+	dw Route16Mons           ; ROUTE_16
+	dw Route17Mons           ; ROUTE_17
+	dw Route18Mons           ; ROUTE_18
+	dw SeaWaterMons          ; ROUTE_19
+	dw SeaWaterMons          ; ROUTE_20
+	dw Route21Mons           ; ROUTE_21
+	dw Route22Mons           ; ROUTE_22
+	dw Route23Mons           ; ROUTE_23
+	dw Route24Mons           ; ROUTE_24
+	dw Route25Mons           ; ROUTE_25
+	dw NoMons                ; REDS_HOUSE_1F
 	dw NoMons
 	dw NoMons
 	dw NoMons
@@ -265,6 +265,8 @@ INCLUDE "data/wildPokemon/nomons.asm"
 INCLUDE "data/wildPokemon/route1.asm"
 INCLUDE "data/wildPokemon/route2.asm"
 INCLUDE "data/wildPokemon/route22.asm"
+INCLUDE "data/wildPokemon/pondwater.asm"
+INCLUDE "data/wildPokemon/seawater.asm"
 INCLUDE "data/wildPokemon/viridianforest.asm"
 INCLUDE "data/wildPokemon/route3.asm"
 INCLUDE "data/wildPokemon/mtmoon1.asm"
@@ -300,8 +302,6 @@ INCLUDE "data/wildPokemon/safarizonecenter.asm"
 INCLUDE "data/wildPokemon/safarizone1.asm"
 INCLUDE "data/wildPokemon/safarizone2.asm"
 INCLUDE "data/wildPokemon/safarizone3.asm"
-INCLUDE "data/wildPokemon/route19.asm"
-INCLUDE "data/wildPokemon/route20.asm"
 INCLUDE "data/wildPokemon/seafoamisland1.asm"
 INCLUDE "data/wildPokemon/seafoamislandb1.asm"
 INCLUDE "data/wildPokemon/seafoamislandb2.asm"

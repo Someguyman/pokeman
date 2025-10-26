@@ -1,0 +1,15 @@
+PondWaterMons:
+	db $00
+
+	db $05
+	db 15,PSYDUCK
+	db 15,SLOWPOKE
+	db 20,PSYDUCK
+	db 20,SLOWPOKE
+	db 25,PSYDUCK
+	db 25,SLOWPOKE
+	db 30,PSYDUCK
+	db 30,SLOWPOKE
+	db 40,PSYDUCK
+	db 40,SLOWPOKE
+

@@ -10,5 +10,16 @@ DungeonMons1:
 	db 54,PARASECT
 	db 55,DITTO
 	db 60,DITTO
-	db $00
+
+	db $05
+	db 45,PSYDUCK
+	db 45,SLOWPOKE
+	db 50,PSYDUCK
+	db 50,SLOWPOKE
+	db 55,PSYDUCK
+	db 55,SLOWPOKE
+	db 55,GOLDUCK
+	db 55,SLOWBRO
+	db 60,GOLDUCK
+	db 60,SLOWBRO
 
