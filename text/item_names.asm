@@ -1,7 +1,7 @@
 ItemNames:
 	db "MASTER BALL@"
-	db "ULTRA BALL@"
-	db "GREAT BALL@"
+	db "HYPER BALL@"
+	db "SUPER BALL@"
 	db "POKé BALL@"
 	db "TOWN MAP@"
 	db "BICYCLE@"
