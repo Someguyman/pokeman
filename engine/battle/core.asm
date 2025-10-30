@@ -4851,6 +4851,7 @@ UnusedHighCriticalMoves:
 	db RAZOR_LEAF
 	db CRABHAMMER
 	db SLASH
+	db CUT
 	db $FF
 
 ; determines if attack is a critical hit
@@ -4928,6 +4929,7 @@ HighCriticalMoves:
 	db RAZOR_LEAF
 	db CRABHAMMER
 	db SLASH
+	db CUT
 	db $FF
 
 
